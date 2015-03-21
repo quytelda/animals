@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <time.h>
 
 #define MAX_ALT 10
-#define MIN_ALT -10
 
 #define SGN(x) ((x >= 0) ? 1 : -1)
 #define MAX(x, y) ((x > y) ? x : y)
@@ -59,13 +59,13 @@ land_t ** init_land(land_t ** land, int size)
 
 void make_landscape(land_t ** land, int size, int num)
 {
+	srand(time(NULL));
 	for(int k = 0; k < num; k++)
 	{
 		int x = rand() % size;
 		int y = rand() % size;
 
 		int dA = rand() % MAX_ALT;
-		printf("(%d, %d).alt += %d\n", x, y, dA);
 
 		raise(land, size, x, y, dA);
 	}
