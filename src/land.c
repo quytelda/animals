@@ -4,16 +4,23 @@
 #include <time.h>
 
 #define MAX_ALT 10
+#define SIZE 64
+#define NUM_PEAKS 128
 
 #define SGN(x) ((x >= 0) ? 1 : -1)
 #define MAX(x, y) ((x > y) ? x : y)
 #define MIN(x, y) ((x > y) ? y : x)
+
+#define KNRM	"\x1B[0m"
+#define KBLU	"\x1B[34m"
+#define KGRN	"\x1B[33m"
 
 typedef enum {ROCK, SOIL, SAND, WATER} terrain_t;
 
 typedef struct land
 {
 	int alt;
+	terrain_t terrain;
 } land_t;
 
 land_t ** init_land(land_t ** land, int size);
@@ -27,15 +34,30 @@ int main()
 	land_t ** land;
 
 	puts("* Initializing land...");
-	land = init_land(land, 64);
+	land = init_land(land, SIZE);
 
 	puts("* Generating landscape...");
-	make_landscape(land, 64, 32);
+	make_landscape(land, SIZE, NUM_PEAKS);
 
-	for(int i = 0; i < 64; i++)
+	for(int i = 0; i < SIZE; i++)
 	{
-		for(int j = 0; j < 64; j++)
-			printf("%d", land[i][j].alt);
+		for(int j = 0; j < SIZE; j++)
+		{
+			char * term_color;
+			switch(land[i][j].terrain)
+			{
+			case WATER:
+				term_color = KBLU;
+				break;
+			case SOIL:
+				term_color = KGRN;
+				break;
+			default:
+				term_color = KNRM;
+			}
+
+			printf("%s%d%s", term_color, land[i][j].alt, KNRM);
+		}
 		putchar('\n');
 	}
 
@@ -59,6 +81,8 @@ land_t ** init_land(land_t ** land, int size)
 
 void make_landscape(land_t ** land, int size, int num)
 {
+	// generate landscape shape
+	puts("==> Shaping landscape...");
 	srand(time(NULL));
 	for(int k = 0; k < num; k++)
 	{
@@ -68,6 +92,25 @@ void make_landscape(land_t ** land, int size, int num)
 		int dA = rand() % MAX_ALT;
 
 		raise(land, size, x, y, dA);
+	}
+
+	// add terrain types
+	puts("==> Adding terrain types...");
+	int waterline = 0;
+	int treeline = (2 * MAX_ALT) / 3;
+	printf(">>> waterline = %d, treeline = %d\n", waterline, treeline);
+
+	for(int i = 0; i < size; i++)
+	{
+		for(int j = 0; j < size; j++)
+		{
+			if(land[i][j].alt <= waterline)
+				land[i][j].terrain = WATER;
+			else if(land[i][j].alt >= treeline)
+				land[i][j].terrain = ROCK;
+			else
+				land[i][j].terrain = SOIL;
+		}
 	}
 }
 
@@ -79,8 +122,6 @@ void raise(land_t ** land, int size, int x, int y, int dA)
 		int x2 = x + i;
 		int y1 = y - i;
 		int y2 = y + i;
-
-		printf("%d,%d,%d,%d\n", x1,x2,y1,y2);
 
 		// fill in horizontally
 		for(int xi = MAX(x1, 0); xi <= MIN(x2, size - 1); xi++)
