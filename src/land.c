@@ -1,69 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
 #include <time.h>
 
-#define MAX_ALT 10
-#define SIZE 64
-#define NUM_PEAKS 128
-
-#define SGN(x) ((x >= 0) ? 1 : -1)
-#define MAX(x, y) ((x > y) ? x : y)
-#define MIN(x, y) ((x > y) ? y : x)
-
-#define KNRM	"\x1B[0m"
-#define KBLU	"\x1B[34m"
-#define KGRN	"\x1B[33m"
-
-typedef enum {ROCK, SOIL, SAND, WATER} terrain_t;
-
-typedef struct land
-{
-	int alt;
-	terrain_t terrain;
-} land_t;
-
-land_t ** init_land(land_t ** land, int size);
-void make_landscape();
-void make_terrain();
-
-void raise(land_t ** land, int size, int x, int y, int alt);
-
-int main()
-{
-	land_t ** land;
-
-	puts("* Initializing land...");
-	land = init_land(land, SIZE);
-
-	puts("* Generating landscape...");
-	make_landscape(land, SIZE, NUM_PEAKS);
-
-	for(int i = 0; i < SIZE; i++)
-	{
-		for(int j = 0; j < SIZE; j++)
-		{
-			char * term_color;
-			switch(land[i][j].terrain)
-			{
-			case WATER:
-				term_color = KBLU;
-				break;
-			case SOIL:
-				term_color = KGRN;
-				break;
-			default:
-				term_color = KNRM;
-			}
-
-			printf("%s%d%s", term_color, land[i][j].alt, KNRM);
-		}
-		putchar('\n');
-	}
-
-	free(land);
-	return 0;
-}
+#include "globals.h"
+#include "land.h"
 
 land_t ** init_land(land_t ** land, int size)
 {
