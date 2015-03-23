@@ -9,7 +9,7 @@ int main()
 	land_t ** land;
 
 	puts("* Initializing land...");
-	land = init_land(land, SIZE);
+	land = init_land(SIZE);
 
 	puts("* Generating landscape...");
 	make_landscape(land, SIZE, NUM_PEAKS);

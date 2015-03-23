@@ -7,13 +7,21 @@
 
 typedef enum {ROCK, SOIL, SAND, WATER} terrain_t;
 
+typedef struct plant
+{
+	int value;
+} plant_t;
+
+
 typedef struct land
 {
 	int alt;
 	terrain_t terrain;
+
+	plant_t * fauna;
 } land_t;
 
-land_t ** init_land(land_t ** land, int size);
+land_t ** init_land(int size);
 void make_landscape(land_t ** land, int size, int num);
 
 void raise(land_t ** land, int size, int x, int y, int alt);

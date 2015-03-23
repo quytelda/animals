@@ -5,9 +5,14 @@
 #include "globals.h"
 #include "land.h"
 
-land_t ** init_land(land_t ** land, int size)
+/**
+ * Allocate and initialize memory representing square, two-dimensional land.
+ * @param size the length of one side of the land square
+ * @return a pointer to the start of the land data
+ */
+land_t ** init_land(int size)
 {
-	land = malloc(size * sizeof(land_t *));
+	land_t ** land = malloc(size * sizeof(land_t *));
 	for(int i = 0; i < size; i++)
 	{
 		land[i] = malloc(size * sizeof(land_t));
@@ -19,6 +24,10 @@ land_t ** init_land(land_t ** land, int size)
 	return land;
 }
 
+/**
+ * Randomly generate a landscape.  A landscape is shaped by elevation,
+ * and contains semi-randomly distributed terrain types.
+ */
 void make_landscape(land_t ** land, int size, int num)
 {
 	// generate landscape shape
@@ -45,15 +54,37 @@ void make_landscape(land_t ** land, int size, int num)
 		for(int j = 0; j < size; j++)
 		{
 			if(land[i][j].alt <= waterline)
+			{
 				land[i][j].terrain = WATER;
+			}
 			else if(land[i][j].alt >= treeline)
+			{
 				land[i][j].terrain = ROCK;
+			}
 			else
+			{
 				land[i][j].terrain = SOIL;
+
+				/* // consider adding fauna */
+				/* int chance = rand() % 2; */
+				/* if(chance) */
+				/* { */
+				/* 	land[i][j].fauna = malloc(sizeof(fuana)); */
+				/* 	land[i][j].fauna->value = 100; */
+				/* } */
+			}
 		}
 	}
 }
 
+/**
+ * Apply a change in elevation to the given (x, y).
+ * @param land 
+ * @param size 
+ * @param x
+ * @param y
+ * @param dA
+ */
 void raise(land_t ** land, int size, int x, int y, int dA)
 {
 	for(int i = 0; i != dA; i++)
