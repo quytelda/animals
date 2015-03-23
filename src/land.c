@@ -66,22 +66,25 @@ void make_landscape(land_t ** land, int size, int num)
 			else
 			{
 				int chance = rand() % 100;
-				if((chance <= 75 && land[i][j].alt >= sandline) ||
-				   (chance <= 25 && land[i][j].alt < sandline))
+				if((chance <= PROB_SOIL_ABOVE_SL && land[i][j].alt >= sandline) ||
+				   (chance <= PROB_SOIL_BELOW_SL && land[i][j].alt < sandline))
 				{
 					land[i][j].terrain = SOIL;
+
+					// maybe add plant life
+					if(chance <= PROB_SOIL_FERTILITY)
+						land[i][j].fauna.value = 100;
+
 				}
 				else
 				{
+				   
 					land[i][j].terrain = SAND;
+					// maybe add plant life
+					if(chance <= PROB_SAND_FERTILITY)
+						land[i][j].fauna.value = 100;
+
 				}
-
-
-				/* // consider adding fauna */
-				/* { */
-				/* 	land[i][j].fauna = malloc(sizeof(fuana)); */
-				/* 	land[i][j].fauna->value = 100; */
-				/* } */
 			}
 		}
 	}

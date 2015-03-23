@@ -13,4 +13,10 @@
 #define KWHT	"\x1B[97m"
 #define KGRY	"\x1B[37m"
 
+#define BG_NRM	"\x1B[49m"
+#define BG_RED	"\x1B[41m"
+#define BG_GRN	"\x1B[42m"
+#define BG_BLU	"\x1B[44m"
+#define BG_GRY	"\x1B[100m"
+
 #endif

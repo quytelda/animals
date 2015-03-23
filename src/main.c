@@ -19,6 +19,7 @@ int main()
 		for(int j = 0; j < SIZE; j++)
 		{
 			char * term_color;
+			char * term_bg_color = BG_NRM;
 			switch(land[i][j].terrain)
 			{
 			case WATER:
@@ -37,7 +38,10 @@ int main()
 				term_color = KNRM;
 			}
 
-			printf("%s%d%s", term_color, land[i][j].alt, KNRM);
+			if(land[i][j].fauna.value > 0)
+				term_bg_color = BG_GRN;
+
+			printf("%s%s%d%s%s", term_color, term_bg_color, land[i][j].alt, KNRM, BG_NRM);
 		}
 		putchar('\n');
 	}
