@@ -7,6 +7,10 @@
 
 #define KNRM	"\x1B[0m"
 #define KBLU	"\x1B[34m"
-#define KGRN	"\x1B[33m"
+#define KGRN	"\x1B[32m"
+#define KRED	"\x1B[91m"
+#define KYLW	"\x1B[93m"
+#define KWHT	"\x1B[97m"
+#define KGRY	"\x1B[37m"
 
 #endif

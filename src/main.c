@@ -25,7 +25,13 @@ int main()
 				term_color = KBLU;
 				break;
 			case SOIL:
-				term_color = KGRN;
+				term_color = KRED;
+				break;
+			case SAND:
+				term_color = KYLW;
+				break;
+			case ROCK:
+				term_color = KGRY;
 				break;
 			default:
 				term_color = KNRM;

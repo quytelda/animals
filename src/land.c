@@ -47,7 +47,9 @@ void make_landscape(land_t ** land, int size, int num)
 	puts("==> Adding terrain types...");
 	int waterline = 0;
 	int treeline = (2 * MAX_ALT) / 3;
+	int sandline = (waterline + treeline) / 3;
 	printf(">>> waterline = %d, treeline = %d\n", waterline, treeline);
+	printf(">>> sandline = %d\n", sandline);
 
 	for(int i = 0; i < size; i++)
 	{
@@ -63,11 +65,19 @@ void make_landscape(land_t ** land, int size, int num)
 			}
 			else
 			{
-				land[i][j].terrain = SOIL;
+				int chance = rand() % 100;
+				if((chance <= 75 && land[i][j].alt >= sandline) ||
+				   (chance <= 25 && land[i][j].alt < sandline))
+				{
+					land[i][j].terrain = SOIL;
+				}
+				else
+				{
+					land[i][j].terrain = SAND;
+				}
+
 
 				/* // consider adding fauna */
-				/* int chance = rand() % 2; */
-				/* if(chance) */
 				/* { */
 				/* 	land[i][j].fauna = malloc(sizeof(fuana)); */
 				/* 	land[i][j].fauna->value = 100; */
@@ -79,8 +89,8 @@ void make_landscape(land_t ** land, int size, int num)
 
 /**
  * Apply a change in elevation to the given (x, y).
- * @param land 
- * @param size 
+ * @param land
+ * @param size
  * @param x
  * @param y
  * @param dA
