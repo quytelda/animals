@@ -48,8 +48,8 @@ void make_landscape(land_t ** land, int size, int num)
 	int waterline = 0;
 	int treeline = (2 * MAX_ALT) / 3;
 	int sandline = (waterline + treeline) / 3;
-	printf(">>> waterline = %d, treeline = %d\n", waterline, treeline);
-	printf(">>> sandline = %d\n", sandline);
+	printf("  >>> waterline = %d, treeline = %d\n", waterline, treeline);
+	printf("  >>> sandline = %d\n", sandline);
 
 	for(int i = 0; i < size; i++)
 	{
@@ -61,7 +61,13 @@ void make_landscape(land_t ** land, int size, int num)
 			}
 			else if(land[i][j].alt >= treeline)
 			{
-				land[i][j].terrain = ROCK;
+				int chance = rand() % 100;
+				if(chance <= PROB_SOIL_ABOVE_TL)
+				{
+					land[i][j].terrain = SOIL;
+				}
+				else
+					land[i][j].terrain = ROCK;
 			}
 			else
 			{
@@ -70,22 +76,19 @@ void make_landscape(land_t ** land, int size, int num)
 				   (chance <= PROB_SOIL_BELOW_SL && land[i][j].alt < sandline))
 				{
 					land[i][j].terrain = SOIL;
-
-					// maybe add plant life
-					if(chance <= PROB_SOIL_FERTILITY)
-						land[i][j].fauna.value = 100;
-
 				}
 				else
 				{
-				   
 					land[i][j].terrain = SAND;
-					// maybe add plant life
-					if(chance <= PROB_SAND_FERTILITY)
-						land[i][j].fauna.value = 100;
-
 				}
 			}
+
+			// maybe add plant life
+			if(land[i][j].terrain == SOIL && (rand() % 100) <= PROB_SOIL_FERTILITY)
+				land[i][j].fauna.value = 100;
+			if(land[i][j].terrain == SAND && (rand() % 100) <= PROB_SOIL_FERTILITY)
+				land[i][j].fauna.value = 100;
+
 		}
 	}
 }

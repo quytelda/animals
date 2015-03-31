@@ -9,10 +9,11 @@
 
 // Probabilities of landscape features.
 // Probabilities are integers between 0 and 100, inclusive.
-#define PROB_SOIL_FERTILITY	20 // probability a soil square will have plants
+#define PROB_SOIL_FERTILITY 20 // probability a soil square will have plants
 #define PROB_SAND_FERTILITY 10 // probability a sand square will have plants
-#define PROB_SOIL_ABOVE_SL	75 // probability of dirt above the sand line
-#define PROB_SOIL_BELOW_SL	25 // probability of dirt below the sand line
+#define PROB_SOIL_ABOVE_SL  75 // probability of dirt above the sand line
+#define PROB_SOIL_BELOW_SL  25 // probability of dirt below the sand line
+#define PROB_SOIL_ABOVE_TL  10 // probability of dirt above the treeline
 
 typedef enum {ROCK, SOIL, SAND, WATER} terrain_t;
 
