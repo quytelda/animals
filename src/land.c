@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <math.h>
 
 #include "globals.h"
 #include "land.h"
@@ -91,6 +92,16 @@ void make_landscape(land_t ** land, int size, int num)
 
 		}
 	}
+}
+
+void add_matter(plant_t * plant, int m)
+{
+	plant->matter |= (int) pow(2, m);
+}
+
+void rem_matter(plant_t * plant, int m)
+{
+	plant->matter ^= (int) pow(2, m);
 }
 
 /**

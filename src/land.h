@@ -17,11 +17,20 @@
 
 typedef enum {ROCK, SOIL, SAND, WATER} terrain_t;
 
+#define M_FRUIT  0
+#define M_FLOWER 1
+#define M_ROOT   2
+#define M_SEED   3
+#define M_STEM   4
+
 typedef struct plant
 {
+	int matter;
 	int value;
 } plant_t;
 
+void add_matter(plant_t * plant, int m);
+void rem_matter(plant_t * plant, int m);
 
 typedef struct land
 {

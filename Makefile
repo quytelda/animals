@@ -1,7 +1,7 @@
 # Compiler options
 CC=gcc
 CFLAGS=-c -Wall -std=gnu99
-LDFLAGS=
+LDFLAGS=-lm
 
 # File options
 SRCDIR=src
@@ -19,4 +19,4 @@ $(EXECUTABLE): $(OBJECTS)
 
 .PHONY: clean
 clean:
-	rm $(OBJECTS) $(EXECUTABLE)
+	rm -f $(OBJECTS) $(EXECUTABLE)
