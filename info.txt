@@ -1,0 +1,6 @@
+PROPERTY DENSITY FERTILITY MOISTURE
+STEMS	 1 - 9	 > 1	   2 - 9
+FLOWERS	 2 - 8	 > 3	   3 - 7
+ROOTS	 3 - 6	 > 3	   4 - 8
+FRUITS	 2 - 7	 > 5	   2 - 8
+SEEDS	 3 - 8	 > 3	   4 - 6
