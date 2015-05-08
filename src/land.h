@@ -8,6 +8,7 @@ typedef struct land
 	short density;
 	short fertility;
 	short moisture;
+	short elevation;
 
 	// TODO: plant list
 	// TODO: animal list
