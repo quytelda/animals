@@ -1,6 +1,6 @@
 # Compiler options
 CC=gcc
-CFLAGS=-c -Wall -std=gnu99
+CFLAGS=-c -Wall -std=gnu99 -g
 LDFLAGS=-lm
 
 # File options
