@@ -1,5 +1,6 @@
 #ifndef __LAND_H
 #define __LAND_H
+#include <stdlib.h>
 
 /* `land_t` represents one square unit of land */
 typedef struct land
