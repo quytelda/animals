@@ -1,6 +1,9 @@
-#include "land.h"
+#include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+
+#include "land.h"
+#include "globals.h"
 
 land_t init_land(world_t * world)
 {
@@ -10,7 +13,7 @@ land_t init_land(world_t * world)
 	ret.density = world->density + (rand() % 5) - 2;
 	ret.fertility = world->fertility + (rand() % 5) - 2;
 	ret.moisture = world->moisture + (rand() % 5) - 2;
-	ret.elevation = 0;
+	ret.alt = 0;
 
 	//TODO: initialize plant list to null
 	//TODO: initialize animal list to null
@@ -31,7 +34,7 @@ void raise(world_t * world, int x, int y, int dA)
 		{
 			if(y1 >= 0)
 				world->land[xi][y1].alt = dA - i;
-			if(y2 < size)
+			if(y2 < world->rows)
 				world->land[xi][y2].alt = dA - i;
 		}
 
@@ -40,7 +43,7 @@ void raise(world_t * world, int x, int y, int dA)
 		{
 			if(x1 >= 0)
 				world->land[x1][yi].alt = dA - i;
-			if(x2 < size)
+			if(x2 < world->cols)
 				world->land[x2][yi].alt = dA - i;
 		}
 
@@ -66,14 +69,13 @@ void init_world(world_t * world)
 	for(int i = 0; i < world->rows; i++)
 	{
 		world->land[i] = malloc(world->cols * sizeof(land_t));
+
 		// set default values
 		for(int j = 0; j < world->cols; j++)
-		{
 			world->land[i][j] = init_land(world);
-		}
 	}
 
-	//Set up the elevation
+	// Set up the elevation
 	tectonic_shifts(world);
 }
 
@@ -83,4 +85,38 @@ void init_world(world_t * world)
  */
 void destroy_world(world_t * world)
 {
+}
+
+void dump_world(world_t * world)
+{
+	for(int i = 0; i < world->rows; i++)
+	{
+		for(int j = 0; j < world->cols; j++)
+		{
+			land_t curr = world->land[i][j];
+
+			// pick foreground
+			int c = 0;
+			if(curr.density < 4 && curr.fertility < 4)
+				c = 196;
+			else if(curr.density < 4 && curr.fertility >= 4)
+				c = 22;
+			else if(curr.density >= 4 && curr.fertility < 4)
+				c = 232+11;
+			else
+				c = 52;
+
+			// pick background
+			int b =0;
+			if(curr.moisture < 3)
+				b = 196+19;
+			else if(curr.moisture >= 8)
+				b = 21;
+			else
+				b=88+16;
+
+			printf("\033[38;5;%d;48;5;%dm%d\033[m", c, b, curr.alt);
+		}
+		putchar('\n');
+	}
 }

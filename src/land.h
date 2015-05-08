@@ -8,7 +8,7 @@ typedef struct land
 	short density;
 	short fertility;
 	short moisture;
-	short elevation;
+	short alt;
 
 	// TODO: plant list
 	// TODO: animal list
@@ -18,6 +18,8 @@ typedef struct world
 {
 	land_t ** land;
 	size_t rows, cols;
+	size_t num_peaks;
+	size_t max_alt;
 
 	// global biome disposition
 	short density;
@@ -27,5 +29,6 @@ typedef struct world
 
 void init_world(world_t * world);
 void destroy_world(world_t * world);
+void dump_world(world_t * world);
 
 #endif
