@@ -10,7 +10,7 @@ land_t init_land(world_t * world)
 	ret.density = world->density + (rand() % 5) - 2;
 	ret.fertility = world->fertility + (rand() % 5) - 2;
 	ret.moisture = world->moisture + (rand() % 5) - 2;
-	ret.elevation = 0;
+	ret.alt = 0;
 
 	//TODO: initialize plant list to null
 	//TODO: initialize animal list to null
