@@ -29,5 +29,6 @@ typedef struct world
 
 void init_world(world_t * world);
 void destroy_world(world_t * world);
+void dump_world(world_t * world);
 
 #endif
