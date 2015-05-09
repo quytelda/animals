@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
 		
 		world.rows = r;
 		world.cols = c;
-		world.num_peaks = p;
+		world.num_splotches = p;
 	}
 	else
 	{
@@ -44,7 +44,7 @@ int main(int argc, char *argv[])
 
 		world.rows = w.ws_row - 3;
 		world.cols = w.ws_col;
-		world.num_peaks = (w.ws_row * w.ws_col)/30;
+		world.num_splotches = (w.ws_row * w.ws_col)/30;
 	}
 
 	world.max_alt = 10;

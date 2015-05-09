@@ -61,13 +61,12 @@ void splotch_set(world_t * world, int x, int y, short dA, void (*func)(land_t *,
 	}
 }
 
-
+/**
+ * Initialize land tile's properties to the 
+ * corresponding world's property +- 2 */
 land_t init_land(world_t * world, short var)
 {
 	land_t lres;
-
-	// Initialize land tile's properties to the 
-	// corresponding world's property +- 2
 	lres.density =   world->density   + RVAR(var);
 	lres.fertility = world->fertility + RVAR(var);
 	lres.moisture =  world->moisture  + RVAR(var);
@@ -80,7 +79,7 @@ land_t init_land(world_t * world, short var)
 
 void apply_splotches(world_t * world, void (*setter)(land_t *, short))
 {
-	for(int k = 0; k < world->num_peaks; k++)
+	for(int k = 0; k < world->num_splotches; k++)
 	{
 		int x = rand() % world->rows;
 		int y = rand() % world->cols;
@@ -133,7 +132,7 @@ void destroy_world(world_t * world)
 }
 
 
-//Dump a pictorial representation of the world, for debugging only
+/** Dump a pictorial representation of the world, for debugging only. */
 void dump_world(world_t * world)
 {
 	for(int i = 0; i < world->rows; i++)

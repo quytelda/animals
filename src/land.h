@@ -25,7 +25,7 @@ typedef struct world
 {
 	land_t ** land;
 	size_t rows, cols;
-	size_t num_peaks;
+	size_t num_splotches;
 	size_t max_alt;
 
 	// global biome disposition
