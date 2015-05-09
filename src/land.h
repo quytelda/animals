@@ -39,5 +39,6 @@ void destroy_world(world_t * world)
 	__attribute__((nonnull));
 void dump_world(world_t * world)
 	__attribute__((nonnull));
-
+void dump_world_elevation(world_t * world)
+	__attribute__((nonnull));
 #endif

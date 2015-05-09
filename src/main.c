@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
 
 	world.max_alt = 10;
 	world.density = 0;
-	world.moisture = 3;
+	world.moisture = 5;
 	world.fertility = 0;
 
 	init_world(&world);
