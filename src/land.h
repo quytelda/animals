@@ -2,6 +2,13 @@
 #define __LAND_H
 #include <stdlib.h>
 
+#define MAX_DENSITY 10
+#define MAX_FERTILITY 10
+#define MAX_MOISTURE 10
+#define MAX_ALTITUDE 10
+
+#define LAND_VAR 2
+
 /* `land_t` represents one square unit of land */
 typedef struct land
 {
@@ -28,7 +35,9 @@ typedef struct world
 } world_t;
 
 void init_world(world_t * world);
-void destroy_world(world_t * world);
-void dump_world(world_t * world);
+void destroy_world(world_t * world)
+	__attribute__((nonnull));
+void dump_world(world_t * world)
+	__attribute__((nonnull));
 
 #endif

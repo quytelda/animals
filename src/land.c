@@ -1,33 +1,39 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <assert.h>
 
 #include "land.h"
 #include "globals.h"
 
-void change_alt(land_t * land, short x)
+void set_alt(land_t * land, short x)
 {
 	land->alt = x;
 }
 
-void change_density(land_t * land, short x)
+void set_density(land_t * land, short x)
 {
 	land->density = x;
 }
 
-void change_moisture(land_t * land, short x)
+void set_moisture(land_t * land, short x)
 {
 	land->moisture = MIN(x, 7);
 }
 
-void change_fertility(land_t * land, short x)
+void set_fertility(land_t * land, short x)
 {
 	land->fertility = x;
 }
 
 
-void apply_change(world_t * world, int x, int y, short dA, void (*func)(land_t *, short))
+void splotch_set(world_t * world, int x, int y, short dA, void (*func)(land_t *, short))
 {
+	assert(world);
+	assert(x < world->rows);
+	assert(y < world->cols);
+	assert(func);
+
 	for(int i = 0; i < dA; i++)
 	{
 		int x1 = x - i;
@@ -56,40 +62,38 @@ void apply_change(world_t * world, int x, int y, short dA, void (*func)(land_t *
 }
 
 
-land_t init_land(world_t * world)
+land_t init_land(world_t * world, short var)
 {
-	land_t ret;
-	//Initialize land tile's properties to the 
-	//	corresponding world's property +- 2
-	ret.density = MIN(MAX(world->density + (rand() % 5) - 2, 0),9);
-	ret.fertility = MIN(MAX(world->fertility + (rand() % 5) - 2, 0),9);
-	ret.moisture = MIN(MAX(world->moisture + (rand() % 5) - 2, 0),9);
-	ret.alt = 0;
+	land_t lres;
+
+	// Initialize land tile's properties to the 
+	// corresponding world's property +- 2
+	lres.density =   world->density   + RVAR(var);
+	lres.fertility = world->fertility + RVAR(var);
+	lres.moisture =  world->moisture  + RVAR(var);
+	lres.alt = 0;
 
 	//TODO: initialize plant list to null
 	//TODO: initialize animal list to null
-	return ret;	
+	return lres;	
 }
 
-void apply_splotches(world_t * world, void (*func)(land_t *, short))
+void apply_splotches(world_t * world, void (*setter)(land_t *, short))
 {
 	for(int k = 0; k < world->num_peaks; k++)
 	{
 		int x = rand() % world->rows;
 		int y = rand() % world->cols;
 
-		short dA = (short) rand() % 10;
-		apply_change(world, x, y, dA, func);
+		short delta = (short) rand() % 10;
+		splotch_set(world, x, y, delta, setter);
 	}
 }
 
 
 void init_world(world_t * world)
 {
-	//Seed random number generator for the initialization process
-	srand((unsigned)time(NULL));
-
-	//Allocate space for the land array
+	// allocate space for the land grid
 	world->land = malloc(world->rows * sizeof(land_t *));
 	for(int i = 0; i < world->rows; i++)
 	{
@@ -97,25 +101,23 @@ void init_world(world_t * world)
 
 		// set default values
 		for(int j = 0; j < world->cols; j++)
-			world->land[i][j] = init_land(world);
+			world->land[i][j] = init_land(world, LAND_VAR);
 	}
 
-	// Set up the elevation
-	puts("==> Applying Splotches...");
-	puts("  >>> altitude");
-	apply_splotches(world, change_alt);
-	puts("  >>> moisture");
-	apply_splotches(world, change_moisture);
-	puts("  >>> fertility");
-	apply_splotches(world, change_fertility);
-	puts("  >>> density");
-	apply_splotches(world, change_density);
+	/* Shape the land and add terrain.
+	 * Randomly "splotch" land properties onto the land grid. */
+	srand((unsigned)time(NULL));
+	puts("==> Applying Terrain...");
+	apply_splotches(world, set_alt);
+	apply_splotches(world, set_moisture);
+	apply_splotches(world, set_fertility);
+	apply_splotches(world, set_density);
 
-	puts("==> Just adding water...");
+	puts("==> Adding water...");
 	for(int i = 0; i < world->rows; i++)
 		for(int j = 0; j < world->cols; j++)
-			if(!world->land[i][j].alt)
-				world->land[i][j].moisture = 9;
+			if(world->land[i][j].alt == 0)
+				world->land[i][j].moisture = (MAX_MOISTURE - 1);
 }
 
 /**
