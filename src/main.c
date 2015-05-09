@@ -10,12 +10,13 @@ int main()
 	puts("Then the dev said, let's declare world as a stack variable.");
 
 	world_t world;
-	world.cols = world.rows = 64;
-	world.num_peaks = 32;
+	world.cols = 128;
+	world.rows = 64;
+	world.num_peaks = 300;
 	world.max_alt = 10;
-	world.density = 5;
-	world.moisture = 5;
-	world.fertility = 5;
+	world.density = 0;
+	world.moisture = 3;
+	world.fertility = 0;
 
 	init_world(&world);
 	dump_world(&world);

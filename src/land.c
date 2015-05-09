@@ -5,24 +5,30 @@
 #include "land.h"
 #include "globals.h"
 
-land_t init_land(world_t * world)
+void change_alt(land_t * land, short x)
 {
-	land_t ret;
-	//Initialize land tile's properties to the 
-	//	corresponding world's property +- 2
-	ret.density = world->density + (rand() % 5) - 2;
-	ret.fertility = world->fertility + (rand() % 5) - 2;
-	ret.moisture = world->moisture + (rand() % 5) - 2;
-	ret.alt = 0;
-
-	//TODO: initialize plant list to null
-	//TODO: initialize animal list to null
-	return ret;	
+	land->alt = x;
 }
 
-void raise(world_t * world, int x, int y, int dA)
+void change_density(land_t * land, short x)
 {
-	for(int i = 0; i != dA; i++)
+	land->density = x;
+}
+
+void change_moisture(land_t * land, short x)
+{
+	land->moisture = MIN(x, 7);
+}
+
+void change_fertility(land_t * land, short x)
+{
+	land->fertility = x;
+}
+
+
+void apply_change(world_t * world, int x, int y, short dA, void (*func)(land_t *, short))
+{
+	for(int i = 0; i < dA; i++)
 	{
 		int x1 = x - i;
 		int x2 = x + i;
@@ -30,34 +36,53 @@ void raise(world_t * world, int x, int y, int dA)
 		int y2 = y + i;
 
 		// fill in horizontally
-		for(int xi = MAX(x1, 0); xi <= MIN(x2, world->cols - 1); xi++)
+		for(int xi = MAX(x1, 0); xi <= MIN(x2, world->rows - 1); xi++)
 		{
 			if(y1 >= 0)
-				world->land[xi][y1].alt = dA - i;
-			if(y2 < world->rows)
-				world->land[xi][y2].alt = dA - i;
+				func(&world->land[xi][y1], dA - i);
+			if(y2 < world->cols)
+				func(&world->land[xi][y2], dA - i);
 		}
 
 		// fill in vertically
-		for(int yi = MAX(y1, 0); yi <= MIN(y2, world->rows - 1); yi++)
+		for(int yi = MAX(y1, 0); yi <= MIN(y2, world->cols - 1); yi++)
 		{
 			if(x1 >= 0)
-				world->land[x1][yi].alt = dA - i;
-			if(x2 < world->cols)
-				world->land[x2][yi].alt = dA - i;
+				func(&world->land[x1][yi], dA - i);
+			if(x2 < world->rows)
+				func(&world->land[x2][yi], dA - i);
 		}
-
 	}
 }
 
-void tectonic_shifts(world_t * world)
+
+land_t init_land(world_t * world)
 {
-	//Create some elevation
-	int i;
-	for(i = 0; i < world->num_peaks; i++)
-		raise(world, rand()%world->cols, rand()%world->rows, rand()%world->max_alt);
-	
+	land_t ret;
+	//Initialize land tile's properties to the 
+	//	corresponding world's property +- 2
+	ret.density = MIN(MAX(world->density + (rand() % 5) - 2, 0),9);
+	ret.fertility = MIN(MAX(world->fertility + (rand() % 5) - 2, 0),9);
+	ret.moisture = MIN(MAX(world->moisture + (rand() % 5) - 2, 0),9);
+	ret.alt = 0;
+
+	//TODO: initialize plant list to null
+	//TODO: initialize animal list to null
+	return ret;	
 }
+
+void apply_splotches(world_t * world, void (*func)(land_t *, short))
+{
+	for(int k = 0; k < world->num_peaks; k++)
+	{
+		int x = rand() % world->rows;
+		int y = rand() % world->cols;
+
+		short dA = (short) rand() % 10;
+		apply_change(world, x, y, dA, func);
+	}
+}
+
 
 void init_world(world_t * world)
 {
@@ -76,7 +101,21 @@ void init_world(world_t * world)
 	}
 
 	// Set up the elevation
-	tectonic_shifts(world);
+	puts("==> Applying Splotches...");
+	puts("  >>> altitude");
+	apply_splotches(world, change_alt);
+	puts("  >>> moisture");
+	apply_splotches(world, change_moisture);
+	puts("  >>> fertility");
+	apply_splotches(world, change_fertility);
+	puts("  >>> density");
+	apply_splotches(world, change_density);
+
+	puts("==> Just adding water...");
+	for(int i = 0; i < world->rows; i++)
+		for(int j = 0; j < world->cols; j++)
+			if(!world->land[i][j].alt)
+				world->land[i][j].moisture = 9;
 }
 
 /**
@@ -113,7 +152,7 @@ void dump_world(world_t * world)
 			else if(curr.moisture >= 8)
 				b = 21;
 			else
-				b=88+16;
+				b=16+18;
 
 			printf("\033[38;5;%d;48;5;%dm%d\033[m", c, b, curr.alt);
 		}
