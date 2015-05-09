@@ -22,4 +22,5 @@ int main()
 
 	puts("But it was good, until the function returned.");
 	puts("And things that should not have been forgotten... were freed.");
+	destroy_world(&world);
 }

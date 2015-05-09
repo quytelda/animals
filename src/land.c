@@ -85,8 +85,14 @@ void init_world(world_t * world)
  */
 void destroy_world(world_t * world)
 {
+	int i;
+	for(i=0;i<world->rows;i++)
+		free(world->land[i]);
+	free(world->land);
 }
 
+
+//Dump a pictorial representation of the world, for debugging only
 void dump_world(world_t * world)
 {
 	for(int i = 0; i < world->rows; i++)
