@@ -165,3 +165,43 @@ void dump_world(world_t * world)
 		putchar('\n');
 	}
 }
+
+void dump_world_elevation(world_t * world)
+{
+	for(int i = 0; i < world->rows; i++)
+	{
+		for(int j = 0; j < world->cols; j++)
+		{
+			land_t curr = world->land[i][j];
+
+			// pick foreground
+			int c = 0;
+			if(curr.alt )
+				c = 196;
+			else if(curr.density < 4 && curr.fertility >= 4)
+				c = 22;
+			else if(curr.density >= 4 && curr.fertility < 4)
+				c = 232+11;
+			else
+				c = 52;
+
+			// pick background
+			int b =0;
+			if(curr.alt == 0)
+				b = 21;
+			else if(curr.alt < 2)
+				b = 222;
+			else if(curr.alt >= 2 && curr.alt < 4)
+				b = 130;
+			else if(curr.alt >= 4 && curr.alt < 6)
+				b = 40;
+			else if(curr.alt >= 6 && curr.alt < 8)
+				b = 58;
+			else
+				b= 232 + 13;
+
+			printf("\033[38;5;%d;48;5;%dm%d\033[m", c, b, curr.alt);
+		}
+		putchar('\n');
+	}
+}
