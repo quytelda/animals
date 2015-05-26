@@ -56,8 +56,13 @@ int main(int argc, char *argv[])
 
 	if(argc > 1 && strcmp(argv[argc-1], "e") == 0)
 		dump_world_elevation(&world);
+	else if(argc > 1 && strcmp(argv[argc-1], "c") == 0)
+		{
+			int i = 0;
+			while((i = update_world(&world, i)) && i <= 150000);
+		}
 	else
-	dump_world(&world);
+		dump_world(&world);
 
 	puts("But it was good, until the function returned.");
 	puts("And things that should not have been forgotten... were freed.");

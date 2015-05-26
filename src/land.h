@@ -31,6 +31,9 @@ typedef struct world
 	size_t num_splotches;
 	size_t max_alt;
 
+
+	//animal_t * world_animals;
+
 	// global biome disposition
 	short density;
 	short fertility;
@@ -43,5 +46,9 @@ void destroy_world(world_t * world)
 void dump_world(world_t * world)
 	__attribute__((nonnull));
 void dump_world_elevation(world_t * world)
+	__attribute__((nonnull));
+void dump_world_flaura(world_t * world)
+	__attribute__((nonnull));
+int update_world(world_t * world, int i)
 	__attribute__((nonnull));
 #endif

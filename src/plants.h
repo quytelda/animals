@@ -16,6 +16,7 @@ typedef struct range
 
 typedef struct flaura
 {
+	//range from 0 - 99
 	short fruit;
 	short seeds;
 	short flowers;

@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <assert.h>
+#include <unistd.h>
 
 #include "land.h"
 #include "globals.h"
@@ -89,6 +90,16 @@ void apply_splotches(world_t * world, void (*setter)(land_t *, short))
 	}
 }
 
+void initialize_fauna(land_t * f)
+{
+	f->foliage.fruit 	= 25;
+	f->foliage.seeds 	= 25;
+	f->foliage.flowers 	= 25;
+	f->foliage.roots 	= 25;
+	f->foliage.leaves 	= 25;
+	f->foliage.health 	= 25;
+}
+
 
 void init_world(world_t * world)
 {
@@ -118,7 +129,11 @@ void init_world(world_t * world)
 			if(world->land[i][j].alt == 0)
 				world->land[i][j].moisture = (MAX_MOISTURE - 1);
 
-	puts("==> Adding fauna...");
+	puts("==> Adding flaura...");
+	for(int i = 0; i < world->rows; i++)
+		for(int j = 0; j < world->cols; j++)
+			if(world->land[i][j].alt != 0)
+				initialize_fauna(&world->land[i][j]);
 }
 
 /**
@@ -131,6 +146,112 @@ void destroy_world(world_t * world)
 	for(i=0;i<world->rows;i++)
 		free(world->land[i]);
 	free(world->land);
+}
+
+int check_range(short l, short m, short x)
+{
+	if(x >= l && x <= m)
+		return 1;
+	return -1;
+}
+
+void update_fauna(land_t * land)
+{
+	//weight all 4 equally
+	short d = land->density;
+	short m = land->moisture;
+	short f = land->fertility;
+	short a = land->alt;
+
+	if(land->foliage.fruit)
+	{
+		int inc = -2;
+		inc += rand() % 5;
+		inc += check_range(2, 6, d);
+		inc += check_range(4, 10, f);
+		inc += check_range(3, 7, m);
+		inc += check_range(1, 5, a);
+		land->foliage.fruit += inc;
+		land->foliage.fruit = MIN(land->foliage.fruit, 99);
+		land->foliage.fruit = MAX(land->foliage.fruit, 0);
+	}
+
+	if(land->foliage.seeds)
+	{
+		int inc = -2;
+		inc += rand() % 5;
+		inc += check_range(2, 7, d);
+		inc += check_range(3, 10, f);
+		inc += check_range(2, 6, m);
+		inc += check_range(2, 7, a);
+		land->foliage.seeds += inc;
+		land->foliage.seeds = MIN(land->foliage.seeds, 99);
+		land->foliage.seeds = MAX(land->foliage.seeds, 0);
+	}
+
+	if(land->foliage.flowers)
+	{
+		int inc = -2;
+		inc += rand() % 5;
+		inc += check_range(3, 6, d);
+		inc += check_range(3, 10, f);
+		inc += check_range(2, 8, m);
+		inc += check_range(1, 7, a);
+		land->foliage.flowers += inc;
+		land->foliage.flowers = MIN(land->foliage.flowers, 99);
+		land->foliage.flowers = MAX(land->foliage.flowers, 0);
+	}
+
+	if(land->foliage.roots)
+	{
+		int inc = -2;
+		inc += rand() % 5;
+		inc += check_range(3, 6, d);
+		inc += check_range(2, 10, f);
+		inc += check_range(2, 6, m);
+		inc += check_range(1, 5, a);
+		land->foliage.roots += inc;
+		land->foliage.roots = MIN(land->foliage.roots, 99);
+		land->foliage.roots = MAX(land->foliage.roots, 0);
+	}	
+
+	if(land->foliage.leaves)
+	{
+		int inc = -2;
+		inc += rand() % 5;
+		inc += check_range(1, 8, d);
+		inc += check_range(1, 10, f);
+		inc += check_range(1, 8, m);
+		inc += check_range(1, 8, a);
+		land->foliage.leaves += inc;
+		land->foliage.leaves = MIN(land->foliage.leaves, 99);
+		land->foliage.leaves = MAX(land->foliage.leaves, 0);
+	}
+
+	land->foliage.health = land->foliage.fruit + land->foliage.seeds + land->foliage.flowers + land->foliage.roots + land->foliage.leaves;
+}
+//continuously iterates through all plants and animals
+	//updates them and the worlds knowledge of them
+int update_world(world_t * world, int i)
+{
+	//updates all plants
+	//puts("updating flaura...");
+	for(int i = 0; i < world->rows; i++)
+		for(int j = 0; j < world->cols; j++)
+			if(world->land[i][j].alt != 0)
+				update_fauna(&world->land[i][j]);
+	
+	//puts("updating fauna...");
+	//updates all animals
+
+	if(!(i % 10000))
+	{
+		sleep(1);
+		dump_world_flaura(world);
+		puts("\n");
+		printf("World is at iteration %d\n", i);
+	}
+	return i + 1;
 }
 
 
@@ -204,6 +325,45 @@ void dump_world_elevation(world_t * world)
 				b= 232 + 13;
 
 			printf("\033[38;5;%d;48;5;%dm%d\033[m", c, b, curr.alt);
+		}
+		putchar('\n');
+	}
+}
+
+void dump_world_flaura(world_t * world)
+{
+	for(int i = 0; i < world->rows; i++)
+	{
+		for(int j = 0; j < world->cols; j++)
+		{
+			land_t curr = world->land[i][j];
+
+			// pick background
+			int bg = 0;
+			if(curr.foliage.health < 100)
+				bg = 196;
+			else if(curr.foliage.health < 200)
+				bg = 52;
+			else if(curr.foliage.health < 300)
+				bg = 222;
+			else if(curr.foliage.health < 400)
+				bg = 22;
+			else
+				bg = 40;
+
+			// pick foreground
+			int fg =0;
+			if(curr.foliage.leaves < 25)
+				fg = 16+18;
+			else if(curr.foliage.leaves >= 75)
+				fg = 232 + 13;
+			else
+				fg = 196+19;
+
+			if(curr.alt == 0)
+				bg = 21;
+
+			printf("\033[38;5;%d;48;5;%dm%d\033[m", fg, bg, (curr.foliage.health/100));
 		}
 		putchar('\n');
 	}
