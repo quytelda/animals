@@ -53,8 +53,8 @@ int main(int argc, char *argv[])
 	world.fertility = 0;
 
 	init_world(&world);
-	dump_world(&world);
-	//dump_world_elevation(&world);
+	//dump_world(&world);
+	dump_world_elevation(&world);
 
 	puts("But it was good, until the function returned.");
 	puts("And things that should not have been forgotten... were freed.");

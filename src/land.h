@@ -1,6 +1,9 @@
 #ifndef __LAND_H
 #define __LAND_H
+
 #include <stdlib.h>
+
+#include "plants.h"
 
 #define MAX_DENSITY 10
 #define MAX_FERTILITY 10
@@ -17,7 +20,7 @@ typedef struct land
 	short moisture;
 	short alt;
 
-	// TODO: plant list
+	flaura_t foliage;
 	// TODO: animal list
 } land_t;
 

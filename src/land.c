@@ -72,9 +72,9 @@ land_t init_land(world_t * world, short var)
 	lres.moisture =  world->moisture  + RVAR(var);
 	lres.alt = 0;
 
-	//TODO: initialize plant list to null
+	lres.foliage = (flaura_t) {0, 0, 0, 0, 0, 0};
 	//TODO: initialize animal list to null
-	return lres;	
+	return lres;
 }
 
 void apply_splotches(world_t * world, void (*setter)(land_t *, short))
@@ -117,6 +117,8 @@ void init_world(world_t * world)
 		for(int j = 0; j < world->cols; j++)
 			if(world->land[i][j].alt == 0)
 				world->land[i][j].moisture = (MAX_MOISTURE - 1);
+
+	puts("==> Adding fauna...");
 }
 
 /**
@@ -142,26 +144,26 @@ void dump_world(world_t * world)
 			land_t curr = world->land[i][j];
 
 			// pick foreground
-			int c = 0;
+			int fg = 0;
 			if(curr.density < 4 && curr.fertility < 4)
-				c = 196;
+				fg = 196;
 			else if(curr.density < 4 && curr.fertility >= 4)
-				c = 22;
+				fg = 22;
 			else if(curr.density >= 4 && curr.fertility < 4)
-				c = 232+11;
+				fg = 232+11;
 			else
-				c = 52;
+				fg = 52;
 
 			// pick background
-			int b =0;
+			int bg =0;
 			if(curr.moisture < 3)
-				b = 196+19;
+				bg = 196+19;
 			else if(curr.moisture >= 8)
-				b = 21;
+				bg = 21;
 			else
-				b=16+18;
+				bg = 16+18;
 
-			printf("\033[38;5;%d;48;5;%dm%d\033[m", c, b, curr.alt);
+			printf("\033[38;5;%d;48;5;%dm%d\033[m", fg, bg, curr.alt);
 		}
 		putchar('\n');
 	}

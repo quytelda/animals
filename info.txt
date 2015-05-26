@@ -1,6 +1,7 @@
-PROPERTY DENSITY FERTILITY MOISTURE
-PLANT	 1 - 9	 > 1	   2 - 9
-FLOWERS	 2 - 8	 > 3	   3 - 7
-ROOTS	 3 - 6	 > 3	   4 - 8
-FRUITS	 2 - 7	 > 5	   2 - 8
-SEEDS	 3 - 8	 > 3	   4 - 6
+PROPERTY DENSITY FERTILITY MOISTURE	ALTITUDE
+LEAVES	 1 - 8	 1 - MAX   1 - 8	1 - 8
+FLOWERS	 3 - 6	 3 - MAX   2 - 8	1 - 7
+ROOTS	 3 - 6	 2 - MAX   2 - 6	1 - 5
+FRUITS	 2 - 6	 4 - MAX   3 - 7	1 - 5
+SEEDS	 2 - 7	 3 - MAX   2 - 6	2 - 7
+x2
