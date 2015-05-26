@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
 	puts("Then the dev said, let's declare world as a stack variable.");
 
 	world_t world;
-	if(argc == 4)
+	if(argc == 5 || argc == 4)
 	{
 		int r;
 		int c;
@@ -53,8 +53,11 @@ int main(int argc, char *argv[])
 	world.fertility = 0;
 
 	init_world(&world);
-	//dump_world(&world);
-	dump_world_elevation(&world);
+
+	if(argc > 1 && strcmp(argv[argc-1], "e") == 0)
+		dump_world_elevation(&world);
+	else
+	dump_world(&world);
 
 	puts("But it was good, until the function returned.");
 	puts("And things that should not have been forgotten... were freed.");
