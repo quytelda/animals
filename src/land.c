@@ -3,6 +3,7 @@
 #include <time.h>
 #include <assert.h>
 #include <unistd.h>
+#include <ncurses.h>
 
 #include "land.h"
 #include "globals.h"
@@ -92,12 +93,12 @@ void apply_splotches(world_t * world, void (*setter)(land_t *, short))
 
 void initialize_fauna(land_t * f)
 {
-	f->foliage.fruit 	= 25;
-	f->foliage.seeds 	= 25;
-	f->foliage.flowers 	= 25;
-	f->foliage.roots 	= 25;
-	f->foliage.leaves 	= 25;
-	f->foliage.health 	= 25;
+	f->foliage.fruit 	= rand() % 60;
+	f->foliage.seeds 	= rand() % 60;
+	f->foliage.flowers 	= rand() % 60;
+	f->foliage.roots 	= rand() % 60;
+	f->foliage.leaves 	= rand() % 60;
+	f->foliage.health 	= rand() % 60;
 }
 
 
@@ -155,7 +156,7 @@ int check_range(short l, short m, short x)
 	return -1;
 }
 
-void update_fauna(land_t * land)
+void update_flaura(land_t * land)
 {
 	//weight all 4 equally
 	short d = land->density;
@@ -232,26 +233,19 @@ void update_fauna(land_t * land)
 }
 //continuously iterates through all plants and animals
 	//updates them and the worlds knowledge of them
-int update_world(world_t * world, int i)
+int update_world(world_t * world)
 {
 	//updates all plants
 	//puts("updating flaura...");
 	for(int i = 0; i < world->rows; i++)
 		for(int j = 0; j < world->cols; j++)
 			if(world->land[i][j].alt != 0)
-				update_fauna(&world->land[i][j]);
+				update_flaura(&world->land[i][j]);
 	
 	//puts("updating fauna...");
 	//updates all animals
 
-	if(!(i % 10000))
-	{
-		sleep(1);
-		dump_world_flaura(world);
-		puts("\n");
-		printf("World is at iteration %d\n", i);
-	}
-	return i + 1;
+	return 1;
 }
 
 
@@ -368,3 +362,5 @@ void dump_world_flaura(world_t * world)
 		putchar('\n');
 	}
 }
+
+

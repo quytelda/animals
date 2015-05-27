@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/ioctl.h>
+#include <ncurses.h>
+#include <unistd.h>
 #include "land.h"
 #include "globals.h"
 
@@ -43,7 +45,7 @@ int main(int argc, char *argv[])
 		ioctl(0, TIOCGWINSZ, &w);
 
 		world.rows = w.ws_row - 3;
-		world.cols = w.ws_col;
+		world.cols = w.ws_col - 1;
 		world.num_splotches = (w.ws_row * w.ws_col)/30;
 	}
 
@@ -53,16 +55,68 @@ int main(int argc, char *argv[])
 	world.fertility = 0;
 
 	init_world(&world);
+	puts("World created");
+	while(1)
+	{
+		puts("	d - dump soil composition");
+		puts("	e - dump elevation");
+		puts("	p - dump flaura");
+		puts("	c - dump flaura continously");
+		puts("	i - create new world");
+		puts("	q - exit");
 
-	if(argc > 1 && strcmp(argv[argc-1], "e") == 0)
-		dump_world_elevation(&world);
-	else if(argc > 1 && strcmp(argv[argc-1], "c") == 0)
+		char input;
+
+		while(1)
 		{
-			int i = 0;
-			while((i = update_world(&world, i)) && i <= 150000);
+			input = getchar();
+
+			if(input == 'd')
+			{
+				dump_world(&world);
+				break;
+			}
+			else if(input == 'e')
+			{
+				dump_world_elevation(&world);
+				break;
+			}
+			else if(input == 'p')
+			{
+				dump_world_flaura(&world);
+				break;
+			}
+			else if(input == 'c')
+			{
+				int i = 0;
+				while(update_world(&world) && i <= 20)
+				{
+					i++;
+					if(!(i%2))
+					{
+						sleep(2);
+						dump_world_flaura(&world);
+						puts("\n");
+					}
+				}
+				break;
+			}
+			else if(input == 'i')
+			{
+				printf("\033[2J");	
+				init_world(&world);
+				puts("World created");
+				break;
+			}
+			else if(input == 'q')
+				break;
 		}
-	else
-		dump_world(&world);
+		if(input == 'q')
+			break;
+
+		sleep(2);		 
+	}
+
 
 	puts("But it was good, until the function returned.");
 	puts("And things that should not have been forgotten... were freed.");

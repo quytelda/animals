@@ -49,6 +49,6 @@ void dump_world_elevation(world_t * world)
 	__attribute__((nonnull));
 void dump_world_flaura(world_t * world)
 	__attribute__((nonnull));
-int update_world(world_t * world, int i)
+int update_world(world_t * world)
 	__attribute__((nonnull));
 #endif

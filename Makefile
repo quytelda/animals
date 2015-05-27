@@ -1,7 +1,7 @@
 # Compiler options
 CC=gcc
 CFLAGS=-c -Wall -std=gnu99 -g
-LDFLAGS=-lm
+LDFLAGS=-lm -lncurses
 
 # File options
 SRCDIR=src
